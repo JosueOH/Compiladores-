@@ -1,0 +1,80 @@
+package fes.aragon.compilador;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+
+parser code
+{:
+    public String resultado="";
+    public static LinkedList<TError> TablaES = new LinkedList<TError>(); 
+
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!Error Sintactico Recuperado!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+        TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
+        TablaES.add(datos);
+       
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!Error Sintactico no2!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+         TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
+        TablaES.add(datos);
+     
+    }
+:}
+
+action code
+{:
+:}
+
+terminal mas,menos,por,div,para,parc;
+terminal String num;
+
+non terminal String INICIO,E;
+
+precedence left mas, menos;
+precedence left por, div;
+
+start with INICIO;
+
+INICIO::=E:a {: resultado=a; 
+                :};
+
+
+
+E::= E:a mas E:b {: int val1= Integer.parseInt(a);
+                    int val2= Integer.parseInt(b);
+                    int r = val1+val2;
+                    RESULT = String.valueOf(r); :}
+    |E:a menos E:b {: int val1= Integer.parseInt(a);
+                    int r = val1-val2;
+                    RESULT = String.valueOf(r); :}
+    |E:a div E:b {: int val1= Integer.parseInt(a);
+                    int val2= Integer.parseInt(b);
+                    int val2= Integer.parseInt(b);
+                    int r = val1/val2;
+                    RESULT = String.valueOf(r); :}
+    |E:a por E:b {: int val1= Integer.parseInt(a);
+                    int val2= Integer.parseInt(b);
+                    int r = val1*val2;
+                    RESULT = String.valueOf(r); :}
+    |para E:a {: RESULT = a; :} parc
+    |num:a {: RESULT = a; :};

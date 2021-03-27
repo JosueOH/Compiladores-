@@ -1,0 +1,3 @@
+true and false or not false and false;
+true or false and not false and false;
+(true or false) and (not false and false);

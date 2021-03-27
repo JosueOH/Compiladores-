@@ -1,0 +1,63 @@
+package fes.aragon.codigo;
+%%
+%public
+%class Lexico
+%line
+%char
+%column
+%full
+%type Tokens
+%{
+	private boolean hayToken=false;
+	public boolean getHayToken(){
+		return this.hayToken;
+	}
+%}
+
+%init{
+	/* Código que se ejecuta en el constructor de la clase */
+%init}
+%eof{
+	/*Código que se ejecuta al terminar el archivo*/
+	this.hayToken=false;
+%eof}
+Espacio= " "
+PuntoComa= ";"
+saltoLinea= \n|\r
+//Expresiones 
+True="true"
+False="false"
+%%
+{True} {
+			Tokens tok= new Tokens(yytext(),Sym.TRUE,yyline,yycolumn);
+			this.hayToken=true; 
+			return tok;
+}
+
+{False} {
+			Tokens tok= new Tokens(yytext(),Sym.FALSE,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}
+{PuntoComa} {
+			Tokens tok= new Tokens(yytext(),Sym.PUNTOCOMA,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}	
+{saltoLinea} {
+}
+{Espacio} {
+}
+. {
+	String error= "Error Léxico: " + yytext() + " En la linea: " + 
+	(yyline +1) + " Y la coolumna: " + (yycolumn +1);   
+	System.out.println(error);
+}
+
+
+
+
+
+
+
+

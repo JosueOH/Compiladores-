@@ -1,0 +1,81 @@
+package fes.aragon.codigo;
+%%
+%public
+%class Lexico
+%line
+%char
+%column
+%full
+%type Tokens
+%{
+	private boolean hayToken=false;
+	public boolean getHayToken(){
+		return this.hayToken;
+	}
+%}
+
+%init{
+	/* Código que se ejecuta en el constructor de la clase */
+%init}
+%eof{
+	/*Código que se ejecuta al terminar el archivo*/
+	this.hayToken=false;
+%eof}
+Espacio= " "
+PuntoComa= ";"
+saltoLinea= \n|\r
+//Expresiones 
+IGUAL   =     "="
+MAS     =     "+"
+MENOS   =     "-"
+ENTERO	= [0-9]+
+ID      = [A-Za-zñÑ][_0-9A-Za-zñÑ]* 
+%%
+{IGUAL} {
+			Tokens tok= new Tokens(yytext(),Sym.IGUAL,yyline,yycolumn);
+			this.hayToken=true; 
+			return tok;
+}
+
+{MAS} {
+			Tokens tok= new Tokens(yytext(),Sym.MAS,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}
+{MENOS} {
+			Tokens tok= new Tokens(yytext(),Sym.MENOS,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}
+{ID} {
+			Tokens tok= new Tokens(yytext(),Sym.ID,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}
+{ENTERO} {
+			Tokens tok= new Tokens(yytext(),Sym.ENTERO,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}
+{PuntoComa} {
+			Tokens tok= new Tokens(yytext(),Sym.PUNTOCOMA,yyline,yycolumn);
+			this.hayToken=true;
+			return tok;
+}	
+{saltoLinea} {
+}
+{Espacio} {
+}
+. {
+	String error= "Error Léxico: " + yytext() + " En la linea: " + 
+	(yyline +1) + " Y la coolumna: " + (yycolumn +1);   
+	System.out.println(error);
+}
+
+
+
+
+
+
+
+

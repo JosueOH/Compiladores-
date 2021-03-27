@@ -1,0 +1,3 @@
+true,false,and,false,not,false,and,or,
+true,false,false,not,and,false,and,or,
+true,false,or,false,not,false,and,and,

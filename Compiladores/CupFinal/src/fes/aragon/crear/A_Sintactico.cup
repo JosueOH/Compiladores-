@@ -1,0 +1,85 @@
+package fes.aragon.compilador;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+
+parser code
+{:
+    public String resultado="";
+    public int contador=1; 
+    public static LinkedList<TError> TablaES = new LinkedList<TError>(); 
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!Error Sintactico Recuperado!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+        TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
+        TablaES.add(datos);
+       
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!Error Sintactico no2!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+         TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
+        TablaES.add(datos);
+     
+    }
+:}
+
+action code
+{:
+:}
+
+
+terminal Not,And,Or,Apertura,Cierre,PuntoComa;
+terminal String  True, False;
+
+non terminal String INICIO,E;
+
+precedence left Or;
+precedence left And, Not;
+
+
+
+INICIO::= INICIO E:a PuntoComa{:System.out.println(" Resultado de la linea " + contador + ": " +a);
+                    contador ++;:}
+                 |E:a PuntoComa{:System.out.println(" Resultado de la linea "+ contador + ": " +a);
+                    contador ++;:}
+                 |error {:;:};
+
+
+
+
+E::= E:a Or E:b  {: boolean val1= Boolean.parseBoolean(a);
+                    boolean val2= Boolean.parseBoolean(b);                  
+                    boolean r = val1||val2;
+                    RESULT = String.valueOf(r); :}
+
+     |E:a And E:b {: boolean val1= Boolean.parseBoolean(a);
+                    boolean val2= Boolean.parseBoolean(b); 
+                    boolean  r = val1&&val2; 
+                    RESULT = String.valueOf(r); :}
+     | Not E:a {:boolean val1= Boolean.parseBoolean(a);                  
+                    boolean r = !val1;
+                    RESULT = String.valueOf(r);:}    
+             
+
+     |Apertura E Cierre
+     |True:a {: RESULT = a; :}
+                
+     |False:a {: RESULT = a; :};

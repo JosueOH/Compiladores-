@@ -1,0 +1,4 @@
+prueba;
+1p;
+a2;
+ave*;
